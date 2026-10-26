@@ -295,7 +295,7 @@ nav ul::-webkit-scrollbar{display:none}
       <h1>Ronald<br>Nguyen</h1>
       <p class="lede">Computer Engineering and Computer Science student at Northeastern, building where hardware meets software: FPGAs, embedded prototypes, and the C++ and Python tools around them.</p>
       <div class="links">
-        <a class="btn primary pdf" href="Ronald_Nguyen_Resume.pdf?v=2" target="_blank" rel="noopener">Resume (PDF)</a>
+        <a class="btn primary pdf" href="Ronald_Nguyen_Resume.pdf?v=3" target="_blank" rel="noopener">Resume (PDF)</a>
         <a class="btn" href="https://www.linkedin.com/in/ronaldnguyen77" target="_blank" rel="noopener">LinkedIn</a>
         <a class="btn" href="https://github.com/rnguyen-77" target="_blank" rel="noopener">GitHub</a>
         <a class="btn" href="mailto:ronaldnguyen17@gmail.com" target="_top">Email</a>
@@ -363,6 +363,47 @@ nav ul::-webkit-scrollbar{display:none}
       </div>
       <div class="proj-foot">
         <a class="pdf" href="reports/fpga-display-decoder-report.pdf" target="_blank" rel="noopener">Full lab report (PDF)</a>
+      </div>
+    </article>
+
+    <article class="project" id="sonar">
+      <header>
+        <div>
+          <h3>Ultrasonic sonar rangefinder</h3>
+          <p>An HC-SR04 distance sensor interfaced with a Cyclone V FPGA, reading out in centimeters</p>
+        </div>
+        <span class="status">Complete</span>
+      </header>
+      <div class="proj-body">
+        <dl class="spec">
+          <dt>Platform</dt><dd>Intel DE1-SoC (Cyclone V), HC-SR04 sensor</dd>
+          <dt>Tools</dt><dd>Quartus Prime, LPM counter, compare, and divide IP, ADALM 2000 (Scopy)</dd>
+          <dt>Dates</dt><dd>Oct 2026</dd>
+          <dt>Context</dt><dd>EECE 2160 Embedded Design, Lab 3, with a lab partner</dd>
+        </dl>
+        <div class="write">
+          <p class="result"><b>Result</b>Measures distance in real time from 0–255 cm, with oscilloscope-verified readings within 1 cm of a ruler at 10, 20, and 30 cm.</p>
+          <h4>Goal</h4>
+          <p>Read an ultrasonic sensor directly with the FPGA and show the distance to an object in centimeters, reusing the display decoder from my previous project.</p>
+          <h4>What I did</h4>
+          <ul class="tight">
+            <li>Wired the sensor to the FPGA's GPIO header and generated a trigger pulse 10 times a second with a counter and comparator running off the 50 MHz clock.</li>
+            <li>Timed each echo pulse by gating a counter with the echo signal, clearing it at the start of every 100 ms measurement period.</li>
+            <li>Converted the count to centimeters by dividing by 2,915 clock cycles per centimeter of round trip, then displayed it with my 8-bit display decoder.</li>
+          </ul>
+          <h4>Challenges and results</h4>
+          <p>The first test showed a flickering 688 that ignored objects. The scope showed a good trigger but an echo stuck high, and grounding the echo input proved the circuit worked: the header pins had been counted from the wrong end, which reversed the sensor's power and damaged it. The same test exposed a reversed segment order. After fixing the pin assignments and replacing the sensor, all readings matched the ruler within 1 cm.</p>
+        </div>
+      </div>
+      <div class="gallery">
+        <figure class="shot"><img src="images/sonar-board.jpg" alt="Measuring a box against a ruler, with the distance on the displays" loading="lazy"><figcaption>Measuring a box against a ruler, with the distance on the displays</figcaption></figure>
+        <figure class="shot fit"><img src="images/sonar-scope-30cm.png" alt="Trigger and echo at 30 cm (1.750 ms echo)" loading="lazy"><figcaption>Trigger and echo at 30 cm (1.750 ms echo)</figcaption></figure>
+        <figure class="shot fit"><img src="images/sonar-schematic.png" alt="Sonar circuit schematic in Quartus" loading="lazy"><figcaption>Sonar circuit schematic in Quartus</figcaption></figure>
+        <figure class="shot"><img src="images/sonar-detecting.jpg" alt="Detecting the box at 30 cm" loading="lazy"><figcaption>Detecting the box at 30 cm</figcaption></figure>
+        <figure class="shot fit"><img src="images/sonar-scope-10cm.png" alt="Trigger and echo at 10 cm (569 µs echo)" loading="lazy"><figcaption>Trigger and echo at 10 cm (569 µs echo)</figcaption></figure>
+      </div>
+      <div class="proj-foot">
+        <a class="pdf" href="reports/sonar-rangefinder-report.pdf" target="_blank" rel="noopener">Full lab report (PDF)</a>
       </div>
     </article>
 
@@ -456,8 +497,8 @@ nav ul::-webkit-scrollbar{display:none}
       <div class="small" id="labs">
         <figure class="shot fit"><img src="images/circuits-fft.png" alt="LTspice FFT of a 1 kHz square wave" loading="lazy"><figcaption>LTspice FFT of a 1 kHz square wave</figcaption></figure>
         <h3>Circuits and signals labs</h3>
-        <p>EECE 2150. In the Fourier analysis lab, I showed in LTspice that a square wave is a fundamental plus odd harmonics, then built both square-like and triangle waves from the same 1, 3, and 5 kHz sines by changing only amplitude and phase. In another lab, I modeled the oscilloscope and function generator as Thevenin equivalents; the model predicted the loaded output within about 1% of what we measured.</p>
-        <div class="card-links"><a class="pdf" href="reports/fourier-analysis-report.pdf" target="_blank" rel="noopener">Fourier lab (PDF)</a> <a class="pdf" href="reports/thevenin-equivalents-report.pdf" target="_blank" rel="noopener">Thevenin lab (PDF)</a></div>
+        <p>EECE 2150. In the Fourier analysis lab, I showed in LTspice that a square wave is a fundamental plus odd harmonics, then built both square-like and triangle waves from the same 1, 3, and 5 kHz sines by changing only amplitude and phase. In MATLAB, I demonstrated aliasing by sampling a 1 kHz tone below the Nyquist rate and showed that only 1/n harmonic weighting produces a square wave. I also modeled the oscilloscope and function generator as Thevenin equivalents, predicting the loaded output within about 1% of what we measured, and built a non-inverting op-amp amplifier.</p>
+        <div class="card-links"><a class="pdf" href="reports/fourier-analysis-report.pdf" target="_blank" rel="noopener">Fourier lab (PDF)</a> <a class="pdf" href="reports/matlab-sinusoids-report.pdf" target="_blank" rel="noopener">MATLAB sinusoids lab (PDF)</a> <a class="pdf" href="reports/thevenin-equivalents-report.pdf" target="_blank" rel="noopener">Thevenin lab (PDF)</a></div>
       </div>
       <div class="small">
         <figure class="shot fit"><img src="images/adder-schematic.png" alt="4-bit adder schematic in Quartus" loading="lazy"><figcaption>4-bit adder schematic in Quartus</figcaption></figure>
@@ -536,13 +577,14 @@ nav ul::-webkit-scrollbar{display:none}
     <p class="intro">Each skill points to where I've actually used it.</p>
     <div class="bench-scroll">
       <table class="bench">
-        <tr><th scope="row">Lab equipment</th><td>Oscilloscope, function generator, DMM, DC power supply</td><td class="evidence"><a href="#labs">Circuits labs</a></td></tr>
+        <tr><th scope="row">Lab equipment</th><td>Oscilloscope, function generator, DMM, DC power supply, ADALM 2000 (Scopy)</td><td class="evidence"><a href="#labs">Circuits labs</a>, <a href="#sonar">Sonar rangefinder</a></td></tr>
+        <tr><th scope="row">Analog circuits</th><td>Non-inverting op-amp amplifiers, Thevenin equivalents, RLC circuit analysis</td><td class="evidence"><a href="#labs">Circuits labs</a></td></tr>
         <tr><th scope="row">EDA &amp; simulation</th><td>LTspice (DC, transient, FFT), Quartus Prime, Altium Designer</td><td class="evidence"><a href="#labs">Circuits labs</a>, <a href="#fpga">Display decoder</a></td></tr>
-        <tr><th scope="row">Digital &amp; FPGA</th><td>Intel DE1-SoC (Cyclone V), K-map minimization, functional simulation</td><td class="evidence"><a href="#fpga">Display decoder</a></td></tr>
+        <tr><th scope="row">Digital &amp; FPGA</th><td>Intel DE1-SoC (Cyclone V), K-map minimization, functional simulation, sensor interfacing over GPIO</td><td class="evidence"><a href="#fpga">Display decoder</a>, <a href="#sonar">Sonar rangefinder</a></td></tr>
         <tr><th scope="row">Embedded</th><td>Arduino, sensors, relays, GPS, soldering</td><td class="evidence"><a href="#jacket">Heated jacket</a>, <a href="#cattle">Cattle EID</a></td></tr>
-        <tr><th scope="row">Languages</th><td>Python, C++, MATLAB, R</td><td class="evidence"><a href="#experience">Analogic co-op</a></td></tr>
+        <tr><th scope="row">Languages</th><td>Python, C++, MATLAB, R</td><td class="evidence"><a href="#experience">Analogic co-op</a>, <a href="#labs">Circuits labs (MATLAB)</a></td></tr>
         <tr><th scope="row">Software &amp; tools</th><td>Git, GoogleTest, CMake, OpenCV, Linux, Windows</td><td class="evidence"><a href="#experience">Analogic co-op</a></td></tr>
-        <tr><th scope="row">Concepts</th><td>Digital logic design, embedded systems, object-oriented design, design patterns, unit testing</td><td class="evidence"><a href="#experience">Analogic co-op</a>, <a href="#fpga">Display decoder</a></td></tr>
+        <tr><th scope="row">Concepts</th><td>Digital logic design, embedded systems, sampling and aliasing, Fourier synthesis, object-oriented design, design patterns, unit testing</td><td class="evidence"><a href="#experience">Analogic co-op</a>, <a href="#fpga">Display decoder</a>, <a href="#labs">Circuits labs</a></td></tr>
         <tr><th scope="row">CAD</th><td>SolidWorks, AutoCAD</td><td class="evidence">Cat feeder</td></tr>
         <tr><th scope="row">Currently learning</th><td>PCB design in Altium Designer: schematic capture, hierarchical sheets, signal harnesses, power regulation (LDOs, buck converters)</td><td class="evidence"><a href="#clubs">Electric Racing</a> · first board <span class="soon">Coming soon</span></td></tr>
       </table>
@@ -574,6 +616,8 @@ nav ul::-webkit-scrollbar{display:none}
       <p class="intro">Short, dated notes on what I'm working on between big projects.</p>
     </div>
     <ul class="tight log" style="list-style:none;padding:0">
+      <li><time datetime="2026-10">Oct 2026</time> Built a non-inverting op-amp amplifier in Circuits &amp; Signals.</li>
+      <li><time datetime="2026-10">Oct 2026</time> Finished the ultrasonic sonar rangefinder on the DE1-SoC.</li>
       <li><time datetime="2026-10">Oct 2026</time> Joined Northeastern Electric Racing's electrical team.</li>
       <li><time datetime="2026-10">Oct 2026</time> Started PCB design onboarding in Altium with Electric Racing.</li>
       <li><time datetime="2026-10">Oct 2026</time> Finished the 8-bit display decoder on the DE1-SoC.</li>
@@ -660,7 +704,7 @@ nav ul::-webkit-scrollbar{display:none}
       <button class="btn copy-email" type="button" data-email="ronaldnguyen17@gmail.com">Copy email</button>
       <a class="btn" href="https://www.linkedin.com/in/ronaldnguyen77" target="_blank" rel="noopener">LinkedIn</a>
       <a class="btn" href="https://github.com/rnguyen-77" target="_blank" rel="noopener">GitHub</a>
-      <a class="btn pdf" href="Ronald_Nguyen_Resume.pdf?v=2" target="_blank" rel="noopener">Resume (PDF)</a>
+      <a class="btn pdf" href="Ronald_Nguyen_Resume.pdf?v=3" target="_blank" rel="noopener">Resume (PDF)</a>
     </div>
     <p class="email-line">ronaldnguyen17@gmail.com</p>
     <small>Ronald Nguyen, Boston, MA. Last updated October 2026. More projects and photos are being added.</small>
