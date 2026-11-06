@@ -295,7 +295,7 @@ nav ul::-webkit-scrollbar{display:none}
       <h1>Ronald<br>Nguyen</h1>
       <p class="lede">Computer Engineering and Computer Science student at Northeastern, building where hardware meets software: FPGAs, embedded prototypes, and the C++ and Python tools around them.</p>
       <div class="links">
-        <a class="btn primary pdf" href="Ronald_Nguyen_Resume.pdf?v=3" target="_blank" rel="noopener">Resume (PDF)</a>
+        <a class="btn primary pdf" href="Ronald_Nguyen_Resume.pdf?v=4" target="_blank" rel="noopener">Resume (PDF)</a>
         <a class="btn" href="https://www.linkedin.com/in/ronaldnguyen77" target="_blank" rel="noopener">LinkedIn</a>
         <a class="btn" href="https://github.com/rnguyen-77" target="_blank" rel="noopener">GitHub</a>
         <a class="btn" href="mailto:ronaldnguyen17@gmail.com" target="_top">Email</a>
@@ -325,44 +325,45 @@ nav ul::-webkit-scrollbar{display:none}
     <h2>Projects</h2>
     <p class="intro">Each project shows what I built, how I approached it, and what I learned. Click any image to enlarge it. Full reports are linked under each project.</p>
 
-    <article class="project" id="fpga">
+    <article class="project" id="servo">
       <header>
         <div>
-          <h3>8-bit decimal display decoder</h3>
-          <p>Binary-to-decimal conversion on a Cyclone V FPGA, driving three 7-segment displays</p>
+          <h3>Joystick-controlled RC servo</h3>
+          <p>PWM motor control and ADC interfacing on a Cyclone V FPGA, steering a servo with an analog joystick</p>
         </div>
         <span class="status">Complete</span>
       </header>
       <div class="proj-body">
         <dl class="spec">
-          <dt>Platform</dt><dd>Intel DE1-SoC (Cyclone V)</dd>
-          <dt>Tools</dt><dd>Quartus Prime, LPM divider and comparator IP, VWF simulation</dd>
-          <dt>Dates</dt><dd>Sept – Oct 2026</dd>
-          <dt>Context</dt><dd>EECE 2160 Embedded Design, Lab 2, with a lab partner</dd>
+          <dt>Platform</dt><dd>Intel DE1-SoC (Cyclone V), RC servo, analog joystick</dd>
+          <dt>Tools</dt><dd>Quartus Prime, LPM arithmetic, counter, and compare IP, ADC controller IP, ADALM 2000 (Scopy)</dd>
+          <dt>Dates</dt><dd>Oct – Nov 2026</dd>
+          <dt>Context</dt><dd>EECE 2160 Embedded Design, Labs 4 and 5, with a lab partner</dd>
         </dl>
         <div class="write">
-          <p class="result"><b>Result</b>Displays any 8-bit input (0–255) in decimal across three 7-segment displays, with leading zeros suppressed.</p>
+          <p class="result"><b>Result</b>A joystick sets the servo angle from 0° to 180° in real time, with oscilloscope-measured pulse widths within 0.013 ms of expected.</p>
           <h4>Goal</h4>
-          <p>Display any 8-bit binary input (0–255) from the board's switches as a decimal number on three 7-segment displays.</p>
+          <p>Generate the PWM signal that positions an RC servo, first from angles set on the board's switches, then from an analog joystick read through the FPGA's ADC.</p>
           <h4>What I did</h4>
           <ul class="tight">
-            <li>Built a 16-row truth table and derived minimized Boolean expressions for all seven segments with Karnaugh maps, forcing every non-BCD input (10–15) to blank the display.</li>
-            <li>Packaged the decoder and an enable control into reusable blocks, then chained two divide-by-10 stages: the remainders become the ones and tens digits, and the final quotient becomes the hundreds digit.</li>
-            <li>Suppressed leading zeros with comparator blocks, enabling each display from the quotient rather than its own digit so a middle zero still shows (205 displays as 205, not 2 5).</li>
+            <li>Mapped each angle to a pulse width of 500θ + 30,000 clock cycles (0.6–2.4 ms) with LPM multiply and add blocks, and generated the PWM signal with a counter, comparator, and glitch-removing flip-flop.</li>
+            <li>Clamped switch inputs at 180°, showed the angle with my 8-bit display decoder, and level-shifted the 3.3 V signal to 5 V to drive the servo from an external supply.</li>
+            <li>Replaced the switches with a joystick read through the board's 12-bit ADC, scaling each reading to an angle with θ = 180 × ADC / 4095 and reusing the servo design as a block.</li>
           </ul>
           <h4>Challenges and results</h4>
-          <p>On the first hardware test, non-BCD inputs stayed lit. I traced it to the Karnaugh maps, where those inputs were treated as don't-cares instead of 1s, corrected the expressions, and confirmed the fix in simulation. The final design displayed 7, 19, and 173 correctly on the board.</p>
+          <p>At mid-stick, the joystick read 2.405 V but the display showed 108° instead of the 86° the manual's 0–5 V range predicted. I traced it to the ADC chip's actual 0–4.096 V input range, which predicts 105°, within the scope's offset. Along the way I also fixed duplicate IP files, a wrong device target, and a continuous-rotation servo that spun instead of holding an angle.</p>
         </div>
       </div>
       <div class="gallery">
-        <figure class="shot"><img src="images/fpga-board-173.jpg" alt="Board displaying 173 from switch input 10101101" loading="lazy"><figcaption>Board displaying 173 from switch input 10101101</figcaption></figure>
-        <figure class="shot"><img src="images/fpga-kmaps.jpg" alt="Karnaugh maps for all seven segments" loading="lazy"><figcaption>Karnaugh maps for all seven segments</figcaption></figure>
-        <figure class="shot fit"><img src="images/fpga-schematic.png" alt="8-bit display schematic in Quartus" loading="lazy"><figcaption>8-bit display schematic in Quartus</figcaption></figure>
-        <figure class="shot fit"><img src="images/fpga-simulation.png" alt="Functional simulation waveform" loading="lazy"><figcaption>Functional simulation waveform</figcaption></figure>
-        <figure class="shot"><img src="images/fpga-board-19.jpg" alt="Leading-zero suppression: 19" loading="lazy"><figcaption>Leading-zero suppression: 19</figcaption></figure>
+        <figure class="shot"><img src="images/servo-circuit.jpg" alt="Joystick, displays, and servo running on the DE1-SoC" loading="lazy"><figcaption>Joystick, displays, and servo running on the DE1-SoC</figcaption></figure>
+        <figure class="shot fit"><img src="images/servo-scope-108.png" alt="PWM at 108°: 1.678 ms pulse" loading="lazy"><figcaption>PWM at 108°: 1.678 ms pulse</figcaption></figure>
+        <figure class="shot fit"><img src="images/servo-joystick-schematic.png" alt="Joystick-to-servo schematic with the ADC" loading="lazy"><figcaption>Joystick-to-servo schematic with the ADC</figcaption></figure>
+        <figure class="shot fit"><img src="images/servo-pwm-schematic.png" alt="PWM generator schematic in Quartus" loading="lazy"><figcaption>PWM generator schematic in Quartus</figcaption></figure>
+        <figure class="shot fit"><img src="images/servo-scope-180.png" alt="PWM at 180°: 2.387 ms pulse" loading="lazy"><figcaption>PWM at 180°: 2.387 ms pulse</figcaption></figure>
       </div>
       <div class="proj-foot">
-        <a class="pdf" href="reports/fpga-display-decoder-report.pdf" target="_blank" rel="noopener">Full lab report (PDF)</a>
+        <a class="pdf" href="reports/servo-pwm-report.pdf" target="_blank" rel="noopener">PWM servo lab report (PDF)</a>
+        <a class="pdf" href="reports/joystick-servo-report.pdf" target="_blank" rel="noopener">Joystick lab report (PDF)</a>
       </div>
     </article>
 
@@ -404,6 +405,47 @@ nav ul::-webkit-scrollbar{display:none}
       </div>
       <div class="proj-foot">
         <a class="pdf" href="reports/sonar-rangefinder-report.pdf" target="_blank" rel="noopener">Full lab report (PDF)</a>
+      </div>
+    </article>
+
+    <article class="project" id="fpga">
+      <header>
+        <div>
+          <h3>8-bit decimal display decoder</h3>
+          <p>Binary-to-decimal conversion on a Cyclone V FPGA, driving three 7-segment displays</p>
+        </div>
+        <span class="status">Complete</span>
+      </header>
+      <div class="proj-body">
+        <dl class="spec">
+          <dt>Platform</dt><dd>Intel DE1-SoC (Cyclone V)</dd>
+          <dt>Tools</dt><dd>Quartus Prime, LPM divider and comparator IP, VWF simulation</dd>
+          <dt>Dates</dt><dd>Sept – Oct 2026</dd>
+          <dt>Context</dt><dd>EECE 2160 Embedded Design, Lab 2, with a lab partner</dd>
+        </dl>
+        <div class="write">
+          <p class="result"><b>Result</b>Displays any 8-bit input (0–255) in decimal across three 7-segment displays, with leading zeros suppressed.</p>
+          <h4>Goal</h4>
+          <p>Display any 8-bit binary input (0–255) from the board's switches as a decimal number on three 7-segment displays.</p>
+          <h4>What I did</h4>
+          <ul class="tight">
+            <li>Built a 16-row truth table and derived minimized Boolean expressions for all seven segments with Karnaugh maps, forcing every non-BCD input (10–15) to blank the display.</li>
+            <li>Packaged the decoder and an enable control into reusable blocks, then chained two divide-by-10 stages: the remainders become the ones and tens digits, and the final quotient becomes the hundreds digit.</li>
+            <li>Suppressed leading zeros with comparator blocks, enabling each display from the quotient rather than its own digit so a middle zero still shows (205 displays as 205, not 2 5).</li>
+          </ul>
+          <h4>Challenges and results</h4>
+          <p>On the first hardware test, non-BCD inputs stayed lit. I traced it to the Karnaugh maps, where those inputs were treated as don't-cares instead of 1s, corrected the expressions, and confirmed the fix in simulation. The final design displayed 7, 19, and 173 correctly on the board.</p>
+        </div>
+      </div>
+      <div class="gallery">
+        <figure class="shot"><img src="images/fpga-board-173.jpg" alt="Board displaying 173 from switch input 10101101" loading="lazy"><figcaption>Board displaying 173 from switch input 10101101</figcaption></figure>
+        <figure class="shot"><img src="images/fpga-kmaps.jpg" alt="Karnaugh maps for all seven segments" loading="lazy"><figcaption>Karnaugh maps for all seven segments</figcaption></figure>
+        <figure class="shot fit"><img src="images/fpga-schematic.png" alt="8-bit display schematic in Quartus" loading="lazy"><figcaption>8-bit display schematic in Quartus</figcaption></figure>
+        <figure class="shot fit"><img src="images/fpga-simulation.png" alt="Functional simulation waveform" loading="lazy"><figcaption>Functional simulation waveform</figcaption></figure>
+        <figure class="shot"><img src="images/fpga-board-19.jpg" alt="Leading-zero suppression: 19" loading="lazy"><figcaption>Leading-zero suppression: 19</figcaption></figure>
+      </div>
+      <div class="proj-foot">
+        <a class="pdf" href="reports/fpga-display-decoder-report.pdf" target="_blank" rel="noopener">Full lab report (PDF)</a>
       </div>
     </article>
 
@@ -497,8 +539,8 @@ nav ul::-webkit-scrollbar{display:none}
       <div class="small" id="labs">
         <figure class="shot fit"><img src="images/circuits-fft.png" alt="LTspice FFT of a 1 kHz square wave" loading="lazy"><figcaption>LTspice FFT of a 1 kHz square wave</figcaption></figure>
         <h3>Circuits and signals labs</h3>
-        <p>EECE 2150. In the Fourier analysis lab, I showed in LTspice that a square wave is a fundamental plus odd harmonics, then built both square-like and triangle waves from the same 1, 3, and 5 kHz sines by changing only amplitude and phase. In MATLAB, I demonstrated aliasing by sampling a 1 kHz tone below the Nyquist rate and showed that only 1/n harmonic weighting produces a square wave. I also modeled the oscilloscope and function generator as Thevenin equivalents, predicting the loaded output within about 1% of what we measured, and built a non-inverting op-amp amplifier.</p>
-        <div class="card-links"><a class="pdf" href="reports/fourier-analysis-report.pdf" target="_blank" rel="noopener">Fourier lab (PDF)</a> <a class="pdf" href="reports/matlab-sinusoids-report.pdf" target="_blank" rel="noopener">MATLAB sinusoids lab (PDF)</a> <a class="pdf" href="reports/thevenin-equivalents-report.pdf" target="_blank" rel="noopener">Thevenin lab (PDF)</a></div>
+        <p>EECE 2150. I built an inverting op-amp amplifier (designed for a gain of −10, measured −9.40, with clipping at the ±10 V rails), then extended it into a summing amplifier that adds a −1 V DC offset. I measured an RC circuit's time constant at 2.07 ms against an expected 2 ms, with its −3 dB point near 80 Hz. On the signals side, I built square and triangle waves from odd harmonics in LTspice and MATLAB, demonstrated aliasing below the Nyquist rate, captured real signals through an NI USB DAQ to show quantization, and modeled lab instruments as Thevenin equivalents within about 1% of measurement.</p>
+        <div class="card-links"><a class="pdf" href="reports/op-amp-report.pdf" target="_blank" rel="noopener">Op-amp lab (PDF)</a> <a class="pdf" href="reports/rc-circuits-report.pdf" target="_blank" rel="noopener">RC circuits lab (PDF)</a> <a class="pdf" href="reports/daq-sampling-report.pdf" target="_blank" rel="noopener">DAQ sampling lab (PDF)</a> <a class="pdf" href="reports/fourier-analysis-report.pdf" target="_blank" rel="noopener">Fourier lab (PDF)</a> <a class="pdf" href="reports/matlab-sinusoids-report.pdf" target="_blank" rel="noopener">MATLAB sinusoids lab (PDF)</a> <a class="pdf" href="reports/thevenin-equivalents-report.pdf" target="_blank" rel="noopener">Thevenin lab (PDF)</a></div>
       </div>
       <div class="small">
         <figure class="shot fit"><img src="images/adder-schematic.png" alt="4-bit adder schematic in Quartus" loading="lazy"><figcaption>4-bit adder schematic in Quartus</figcaption></figure>
@@ -577,14 +619,14 @@ nav ul::-webkit-scrollbar{display:none}
     <p class="intro">Each skill points to where I've actually used it.</p>
     <div class="bench-scroll">
       <table class="bench">
-        <tr><th scope="row">Lab equipment</th><td>Oscilloscope, function generator, DMM, DC power supply, ADALM 2000 (Scopy)</td><td class="evidence"><a href="#labs">Circuits labs</a>, <a href="#sonar">Sonar rangefinder</a></td></tr>
-        <tr><th scope="row">Analog circuits</th><td>Non-inverting op-amp amplifiers, Thevenin equivalents, RLC circuit analysis</td><td class="evidence"><a href="#labs">Circuits labs</a></td></tr>
+        <tr><th scope="row">Lab equipment</th><td>Oscilloscope, function generator, DMM, DC power supply, ADALM 2000 (Scopy), NI USB DAQ</td><td class="evidence"><a href="#labs">Circuits labs</a>, <a href="#servo">Joystick servo</a>, <a href="#sonar">Sonar rangefinder</a></td></tr>
+        <tr><th scope="row">Analog circuits</th><td>Inverting and summing op-amp amplifiers, RC circuits (time constant, frequency response), Thevenin equivalents, RLC circuit analysis</td><td class="evidence"><a href="#labs">Circuits labs</a></td></tr>
         <tr><th scope="row">EDA &amp; simulation</th><td>LTspice (DC, transient, FFT), Quartus Prime, Altium Designer</td><td class="evidence"><a href="#labs">Circuits labs</a>, <a href="#fpga">Display decoder</a></td></tr>
-        <tr><th scope="row">Digital &amp; FPGA</th><td>Intel DE1-SoC (Cyclone V), K-map minimization, functional simulation, sensor interfacing over GPIO</td><td class="evidence"><a href="#fpga">Display decoder</a>, <a href="#sonar">Sonar rangefinder</a></td></tr>
-        <tr><th scope="row">Embedded</th><td>Arduino, sensors, relays, GPS, soldering</td><td class="evidence"><a href="#jacket">Heated jacket</a>, <a href="#cattle">Cattle EID</a></td></tr>
+        <tr><th scope="row">Digital &amp; FPGA</th><td>Intel DE1-SoC (Cyclone V), PWM generation, ADC interfacing, sensor interfacing over GPIO, K-map minimization, functional simulation</td><td class="evidence"><a href="#servo">Joystick servo</a>, <a href="#sonar">Sonar rangefinder</a>, <a href="#fpga">Display decoder</a></td></tr>
+        <tr><th scope="row">Embedded</th><td>Arduino, sensors, relays, GPS, servo control, 3.3 V to 5 V level shifting, soldering</td><td class="evidence"><a href="#servo">Joystick servo</a>, <a href="#jacket">Heated jacket</a>, <a href="#cattle">Cattle EID</a></td></tr>
         <tr><th scope="row">Languages</th><td>Python, C++, MATLAB, R</td><td class="evidence"><a href="#experience">Analogic co-op</a>, <a href="#labs">Circuits labs (MATLAB)</a></td></tr>
         <tr><th scope="row">Software &amp; tools</th><td>Git, GoogleTest, CMake, OpenCV, Linux, Windows</td><td class="evidence"><a href="#experience">Analogic co-op</a></td></tr>
-        <tr><th scope="row">Concepts</th><td>Digital logic design, embedded systems, sampling and aliasing, Fourier synthesis, object-oriented design, design patterns, unit testing</td><td class="evidence"><a href="#experience">Analogic co-op</a>, <a href="#fpga">Display decoder</a>, <a href="#labs">Circuits labs</a></td></tr>
+        <tr><th scope="row">Concepts</th><td>Digital logic design, embedded systems, PWM motor control, sampling, quantization, and aliasing, Fourier synthesis, object-oriented design, design patterns, unit testing</td><td class="evidence"><a href="#servo">Joystick servo</a>, <a href="#labs">Circuits labs</a>, <a href="#experience">Analogic co-op</a></td></tr>
         <tr><th scope="row">CAD</th><td>SolidWorks, AutoCAD</td><td class="evidence">Cat feeder</td></tr>
         <tr><th scope="row">Currently learning</th><td>PCB design in Altium Designer: schematic capture, hierarchical sheets, signal harnesses, power regulation (LDOs, buck converters)</td><td class="evidence"><a href="#clubs">Electric Racing</a> · first board <span class="soon">Coming soon</span></td></tr>
       </table>
@@ -616,10 +658,13 @@ nav ul::-webkit-scrollbar{display:none}
       <p class="intro">Short, dated notes on what I'm working on between big projects.</p>
     </div>
     <ul class="tight log" style="list-style:none;padding:0">
-      <li><time datetime="2026-10">Oct 2026</time> Built a non-inverting op-amp amplifier in Circuits &amp; Signals.</li>
+      <li><time datetime="2026-11">Nov 2026</time> Finished joystick control of an RC servo through the DE1-SoC's ADC.</li>
+      <li><time datetime="2026-11">Nov 2026</time> Measured RC circuit time constants and frequency response.</li>
+      <li><time datetime="2026-10">Oct 2026</time> Generated RC servo PWM signals on the DE1-SoC.</li>
+      <li><time datetime="2026-10">Oct 2026</time> Captured and analyzed signals with an NI USB DAQ in MATLAB.</li>
       <li><time datetime="2026-10">Oct 2026</time> Finished the ultrasonic sonar rangefinder on the DE1-SoC.</li>
-      <li><time datetime="2026-10">Oct 2026</time> Joined Northeastern Electric Racing's electrical team.</li>
-      <li><time datetime="2026-10">Oct 2026</time> Started PCB design onboarding in Altium with Electric Racing.</li>
+      <li><time datetime="2026-10">Oct 2026</time> Built inverting and summing op-amp amplifiers in Circuits &amp; Signals.</li>
+      <li><time datetime="2026-10">Oct 2026</time> Joined Northeastern Electric Racing's electrical team and started PCB design onboarding in Altium.</li>
       <li><time datetime="2026-10">Oct 2026</time> Finished the 8-bit display decoder on the DE1-SoC.</li>
     </ul>
   </div>
@@ -704,10 +749,10 @@ nav ul::-webkit-scrollbar{display:none}
       <button class="btn copy-email" type="button" data-email="ronaldnguyen17@gmail.com">Copy email</button>
       <a class="btn" href="https://www.linkedin.com/in/ronaldnguyen77" target="_blank" rel="noopener">LinkedIn</a>
       <a class="btn" href="https://github.com/rnguyen-77" target="_blank" rel="noopener">GitHub</a>
-      <a class="btn pdf" href="Ronald_Nguyen_Resume.pdf?v=3" target="_blank" rel="noopener">Resume (PDF)</a>
+      <a class="btn pdf" href="Ronald_Nguyen_Resume.pdf?v=4" target="_blank" rel="noopener">Resume (PDF)</a>
     </div>
     <p class="email-line">ronaldnguyen17@gmail.com</p>
-    <small>Ronald Nguyen, Boston, MA. Last updated October 2026. More projects and photos are being added.</small>
+    <small>Ronald Nguyen, Boston, MA. Last updated November 2026. More projects and photos are being added.</small>
   </div>
 </footer>
 
