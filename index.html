@@ -295,7 +295,7 @@ nav ul::-webkit-scrollbar{display:none}
       <h1>Ronald<br>Nguyen</h1>
       <p class="lede">Computer Engineering and Computer Science student at Northeastern, building where hardware meets software: FPGAs, embedded prototypes, and the C++ and Python tools around them.</p>
       <div class="links">
-        <a class="btn primary pdf" href="Ronald_Nguyen_Resume.pdf?v=4" target="_blank" rel="noopener">Resume (PDF)</a>
+        <a class="btn primary pdf" href="Ronald_Nguyen_Resume.pdf?v=5" target="_blank" rel="noopener">Resume (PDF)</a>
         <a class="btn" href="https://www.linkedin.com/in/ronaldnguyen77" target="_blank" rel="noopener">LinkedIn</a>
         <a class="btn" href="https://github.com/rnguyen-77" target="_blank" rel="noopener">GitHub</a>
         <a class="btn" href="mailto:ronaldnguyen17@gmail.com" target="_top">Email</a>
@@ -324,6 +324,51 @@ nav ul::-webkit-scrollbar{display:none}
   <div class="wrap">
     <h2>Projects</h2>
     <p class="intro">Each project shows what I built, how I approached it, and what I learned. Click any image to enlarge it. Full reports are linked under each project.</p>
+
+    <article class="project" id="canboard">
+      <header>
+        <div>
+          <h3>CAN FD transceiver board</h3>
+          <p>My first PCB: a 2-layer board that turns a microcontroller's CAN TX/RX into a protected CAN bus, designed for Northeastern Electric Racing</p>
+        </div>
+        <span class="status wip">Pending team approval</span>
+      </header>
+      <div class="proj-body">
+        <dl class="spec">
+          <dt>Board</dt><dd>2-layer PCB, 2.7 × 1.65 in, four M4 mounting holes</dd>
+          <dt>Tools</dt><dd>Altium Designer</dd>
+          <dt>Key parts</dt><dd>TI TCAN3414 CAN FD transceiver, AZ1117 3.3 V LDO, common-mode choke, ESDCAN24 TVS diode</dd>
+          <dt>Dates</dt><dd>Oct – Nov 2026</dd>
+          <dt>Context</dt><dd>Electric Racing SPARKD27 onboarding, design-only exercise</dd>
+        </dl>
+        <div class="write">
+          <p class="result"><b>Result</b>A complete, DRC-clean board taken from hierarchical schematics through layout, routing, and fabrication outputs, submitted for team approval.</p>
+          <h4>Goal</h4>
+          <p>Design the board every new Electric Racing electrical member builds during onboarding: take 5 V power and a microcontroller's CAN TX/RX signals in, and put a filtered, protected CAN bus out.</p>
+          <h4>What I did</h4>
+          <ul class="tight">
+            <li>Split the design into hierarchical Power, Transceiver, and Connectors &amp; Mounts sheets under a top sheet, linking them with ports and a CAN signal harness.</li>
+            <li>Stepped 5 V down to 3.3 V with an AZ1117 LDO and input, output, and decoupling capacitors, with a test point on the 3.3 V rail.</li>
+            <li>Built the CAN interface around a TI TCAN3414 transceiver, with a common-mode choke, 60.4 Ω split termination, 22 pF filter capacitors, and a bidirectional TVS diode for ESD protection.</li>
+            <li>Placed and routed the board, running CAN_P and CAN_N as a differential pair, and generated fabrication and assembly outputs and a BOM.</li>
+          </ul>
+          <h4>Challenges and results</h4>
+          <p>The hardest part was understanding every component well enough to see how it fit into the system as a whole, which meant working through a lot of datasheets and documentation. Routing was the most enjoyable part: there's a lot of freedom in the layout as long as it works and follows the design rules. As a beginner, it's hard to know whether every choice is the best one, so next time I'd look harder for ways to tighten the layout and use board space more efficiently. The board passed DRC with zero errors.</p>
+          <h4>What's next</h4>
+          <p>With onboarding done, new members branch into the powertrain team, the electronics team, or both, and start taking on tasks for the car.</p>
+        </div>
+      </div>
+      <div class="gallery">
+        <figure class="shot"><img src="images/can-board-3d.jpg" alt="3D render of the finished board" loading="lazy"><figcaption>3D render of the finished board</figcaption></figure>
+        <figure class="shot fit"><img src="images/can-board-layout.png" alt="2D layout: top-layer routing over a bottom copper pour" loading="lazy"><figcaption>2D layout: top-layer routing over a bottom copper pour</figcaption></figure>
+        <figure class="shot fit"><img src="images/can-board-sch1.png" alt="Top sheet: hierarchical blocks and the CAN harness" loading="lazy"><figcaption>Top sheet: hierarchical blocks and the CAN harness</figcaption></figure>
+        <figure class="shot fit"><img src="images/can-board-sch3.png" alt="Transceiver sheet: TCAN3414, choke, termination, and TVS" loading="lazy"><figcaption>Transceiver sheet: TCAN3414, choke, termination, and TVS</figcaption></figure>
+        <figure class="shot fit"><img src="images/can-board-sch2.png" alt="Power sheet: 5 V to 3.3 V LDO" loading="lazy"><figcaption>Power sheet: 5 V to 3.3 V LDO</figcaption></figure>
+      </div>
+      <div class="proj-foot">
+        <a class="pdf" href="reports/sparkd27-can-board.pdf" target="_blank" rel="noopener">Schematics and layout (PDF)</a>
+      </div>
+    </article>
 
     <article class="project" id="servo">
       <header>
@@ -590,23 +635,9 @@ nav ul::-webkit-scrollbar{display:none}
             <li>Refactored core C++ code into modular components, isolating the data-loading layer from processing logic behind a single adapter interface.</li>
             <li>Developed Linux-based Python scripts using pandas to parse datasets for production imaging analysis pipelines.</li>
           </ul>
-          <h4>Segmentation module design (simplified)</h4>
-          <figure class="arch" aria-label="Simplified architecture diagram">
-            <svg viewBox="0 0 640 210" role="img">
-              <title>YAML config selects a segmenter through a factory; all segmenters share one abstract interface</title>
-              <g class="box"><rect x="10" y="20" width="150" height="50"/><text x="85" y="50">YAML config</text></g>
-              <g class="box"><rect x="245" y="20" width="150" height="50"/><text x="320" y="50">Segmenter factory</text></g>
-              <g class="box accent"><rect x="480" y="20" width="150" height="50"/><text x="555" y="44">Abstract</text><text x="555" y="60">segmenter base</text></g>
-              <g class="box"><rect x="420" y="140" width="95" height="44"/><text x="467" y="167">Method A</text></g>
-              <g class="box"><rect x="535" y="140" width="95" height="44"/><text x="582" y="167">Method B</text></g>
-              <g class="box dashed"><rect x="245" y="140" width="150" height="44"/><text x="320" y="167">Data adapter</text></g>
-              <path d="M160 45 H245 M395 45 H480 M555 70 V105 H467 V140 M555 105 H582 V140 M320 140 V70" class="wire"/>
-            </svg>
-            <figcaption>New algorithms plug in behind the shared interface and are chosen in config, so calling code never changes. Redrawn and simplified; no proprietary code.</figcaption>
-          </figure>
-          <p class="note"><b>Further work samples and demonstrations</b>To be added pending employer approval, to protect company confidentiality.</p>
           <h4>What I learned</h4>
-          <p><!-- TODO: what a large production codebase taught you; optional redrawn architecture diagram --><span class="soon">Coming soon</span></p>
+          <p><b>Technically,</b> I strengthened my Python fundamentals and learned C++ from scratch. I learned how to unit test properly by modularizing code so each piece could be isolated and tested on its own, and I got hands-on with software architecture: abstraction, encapsulation, inheritance, and object-oriented design. I also learned to work in Linux.</p>
+          <p><b>Beyond the code,</b> the co-op gave me back a routine I had lost after starting college. Holding myself to a professional standard every day made me a more disciplined student, and it made me want to keep learning and ask bigger questions, even about things beyond my current level of knowledge, because curiosity matters. Just as important, I learned to balance work with the rest of my life: staying active, eating well, exploring new hobbies, and focusing on my career when it counts. I came away knowing what keeps me happy and motivated, and how to hold onto that balance.</p>
         </div>
       </div>
     </article>
@@ -621,14 +652,14 @@ nav ul::-webkit-scrollbar{display:none}
       <table class="bench">
         <tr><th scope="row">Lab equipment</th><td>Oscilloscope, function generator, DMM, DC power supply, ADALM 2000 (Scopy), NI USB DAQ</td><td class="evidence"><a href="#labs">Circuits labs</a>, <a href="#servo">Joystick servo</a>, <a href="#sonar">Sonar rangefinder</a></td></tr>
         <tr><th scope="row">Analog circuits</th><td>Inverting and summing op-amp amplifiers, RC circuits (time constant, frequency response), Thevenin equivalents, RLC circuit analysis</td><td class="evidence"><a href="#labs">Circuits labs</a></td></tr>
-        <tr><th scope="row">EDA &amp; simulation</th><td>LTspice (DC, transient, FFT), Quartus Prime, Altium Designer</td><td class="evidence"><a href="#labs">Circuits labs</a>, <a href="#fpga">Display decoder</a></td></tr>
+        <tr><th scope="row">EDA &amp; simulation</th><td>Altium Designer, LTspice (DC, transient, FFT), Quartus Prime</td><td class="evidence"><a href="#canboard">CAN board</a>, <a href="#labs">Circuits labs</a>, <a href="#servo">Joystick servo</a></td></tr>
         <tr><th scope="row">Digital &amp; FPGA</th><td>Intel DE1-SoC (Cyclone V), PWM generation, ADC interfacing, sensor interfacing over GPIO, K-map minimization, functional simulation</td><td class="evidence"><a href="#servo">Joystick servo</a>, <a href="#sonar">Sonar rangefinder</a>, <a href="#fpga">Display decoder</a></td></tr>
         <tr><th scope="row">Embedded</th><td>Arduino, sensors, relays, GPS, servo control, 3.3 V to 5 V level shifting, soldering</td><td class="evidence"><a href="#servo">Joystick servo</a>, <a href="#jacket">Heated jacket</a>, <a href="#cattle">Cattle EID</a></td></tr>
         <tr><th scope="row">Languages</th><td>Python, C++, MATLAB, R</td><td class="evidence"><a href="#experience">Analogic co-op</a>, <a href="#labs">Circuits labs (MATLAB)</a></td></tr>
         <tr><th scope="row">Software &amp; tools</th><td>Git, GoogleTest, CMake, OpenCV, Linux, Windows</td><td class="evidence"><a href="#experience">Analogic co-op</a></td></tr>
         <tr><th scope="row">Concepts</th><td>Digital logic design, embedded systems, PWM motor control, sampling, quantization, and aliasing, Fourier synthesis, object-oriented design, design patterns, unit testing</td><td class="evidence"><a href="#servo">Joystick servo</a>, <a href="#labs">Circuits labs</a>, <a href="#experience">Analogic co-op</a></td></tr>
         <tr><th scope="row">CAD</th><td>SolidWorks, AutoCAD</td><td class="evidence">Cat feeder</td></tr>
-        <tr><th scope="row">Currently learning</th><td>PCB design in Altium Designer: schematic capture, hierarchical sheets, signal harnesses, power regulation (LDOs, buck converters)</td><td class="evidence"><a href="#clubs">Electric Racing</a> · first board <span class="soon">Coming soon</span></td></tr>
+        <tr><th scope="row">PCB design</th><td>Hierarchical schematics, signal harnesses, power regulation (LDOs), CAN transceiver circuits, differential-pair routing, DRC, fabrication outputs and BOMs</td><td class="evidence"><a href="#canboard">CAN board</a></td></tr>
       </table>
     </div>
   </div>
@@ -645,8 +676,8 @@ nav ul::-webkit-scrollbar{display:none}
     </div>
     <div id="clubs">
       <h2>Clubs &amp; teams</h2>
-      <div class="course"><b>Northeastern Electric Racing</b><span>Electrical team member, Oct 2026 – present. Completing PCB design onboarding in Altium Designer. <!-- TODO: your subsystem once assigned -->Subsystem work <span class="soon">Coming soon</span></span></div>
-      <figure class="ph" style="margin-top:1rem;min-height:180px"><strong>Team or car</strong><em>Photo coming soon</em></figure>
+      <div class="course"><b>Northeastern Electric Racing</b><span>Electrical team member, Oct 2026 – present. Designed my first PCB, a <a href="#canboard">CAN FD transceiver board</a>, during onboarding. Next, I'm branching into the powertrain or electronics team and taking on tasks for the car.</span></div>
+      <figure class="shot" style="margin-top:1rem;height:220px"><img src="images/can-board-3d.jpg" alt="My first board for Electric Racing" loading="lazy"><figcaption>My first board for Electric Racing</figcaption></figure>
     </div>
   </div>
 </section>
@@ -658,6 +689,7 @@ nav ul::-webkit-scrollbar{display:none}
       <p class="intro">Short, dated notes on what I'm working on between big projects.</p>
     </div>
     <ul class="tight log" style="list-style:none;padding:0">
+      <li><time datetime="2026-11">Nov 2026</time> Designed my first PCB, a CAN FD transceiver board, for Electric Racing onboarding.</li>
       <li><time datetime="2026-11">Nov 2026</time> Finished joystick control of an RC servo through the DE1-SoC's ADC.</li>
       <li><time datetime="2026-11">Nov 2026</time> Measured RC circuit time constants and frequency response.</li>
       <li><time datetime="2026-10">Oct 2026</time> Generated RC servo PWM signals on the DE1-SoC.</li>
@@ -749,7 +781,7 @@ nav ul::-webkit-scrollbar{display:none}
       <button class="btn copy-email" type="button" data-email="ronaldnguyen17@gmail.com">Copy email</button>
       <a class="btn" href="https://www.linkedin.com/in/ronaldnguyen77" target="_blank" rel="noopener">LinkedIn</a>
       <a class="btn" href="https://github.com/rnguyen-77" target="_blank" rel="noopener">GitHub</a>
-      <a class="btn pdf" href="Ronald_Nguyen_Resume.pdf?v=4" target="_blank" rel="noopener">Resume (PDF)</a>
+      <a class="btn pdf" href="Ronald_Nguyen_Resume.pdf?v=5" target="_blank" rel="noopener">Resume (PDF)</a>
     </div>
     <p class="email-line">ronaldnguyen17@gmail.com</p>
     <small>Ronald Nguyen, Boston, MA. Last updated November 2026. More projects and photos are being added.</small>
